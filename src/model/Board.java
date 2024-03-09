@@ -1,20 +1,4 @@
-/* 
- * Copyright (C) 2014 Joseph
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- */
+
 package model;
 
 import java.awt.GridBagConstraints;
@@ -23,6 +7,8 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Scanner;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -51,6 +37,64 @@ public final class Board extends JPanel {
     public Board() {
         create();
     }
+
+
+    public void setupBoard(String input) {
+        // Split the input into parts
+        String[] parts = input.split(", ");
+        for (String part : parts) {
+            // Extract information about the piece
+            String colorString = part.substring(0, 1);
+            String typeString = part.substring(1, 2);
+            String position = part.substring(2);
+
+            PieceColor color = (colorString.equals("W")) ? PieceColor.WHITE : PieceColor.BLACK;
+            int row = 8 - Character.getNumericValue(position.charAt(1));
+            int col = position.charAt(0) - 'a';
+
+            // Determine the type of piece and create it
+            Piece piece = createPiece(typeString, color);
+
+            // Place the piece on the board
+            piece.putPieceOnSquareFirstTime(board[row][col]);
+            pieces.add(piece);
+            if (color == PieceColor.WHITE) {
+                whitePieces.add(piece);
+                if (piece.isKing()) {
+                    whiteKingPiece = (King) piece;
+                }
+            } else {
+                blackPieces.add(piece);
+                if (piece.isKing()) {
+                    blackKingPiece = (King) piece;
+                }
+            }
+            
+        }
+    }
+
+
+    private Piece createPiece(String typeString, PieceColor color) {
+        switch (typeString) {
+            case "R":
+                return new Rook(color, PieceType.ROOK);
+            case "N":
+                return new Knight(color , PieceType.KNIGHT);
+            case "B":
+                return new Bishop(color , PieceType.BISHOP) ;
+            case "Q":
+                return new Queen(color , PieceType.QUEEN);
+            case "K":
+                return new King(color , PieceType.KING);
+            case "P":
+                return new Pawn(color , PieceType.PAWN);
+            default:
+                return null; // Invalid piece type
+        }
+    }
+
+
+
 
     private JPanel createFilePanel() {
         JPanel filePanel = new JPanel(new GridLayout(1, 0));
@@ -148,76 +192,87 @@ public final class Board extends JPanel {
 
     public void createStandardPieceSet() {
         PieceColor whitePieceColor = PieceColor.WHITE;
-        Piece[] whitePiecesFirstRow = new Piece[]{
-            PieceType.ROOK.create(whitePieceColor),
-            PieceType.KNIGHT.create(whitePieceColor),
-            PieceType.BISHOP.create(whitePieceColor),
-            PieceType.QUEEN.create(whitePieceColor),
-            PieceType.KING.create(whitePieceColor),
-            PieceType.BISHOP.create(whitePieceColor),
-            PieceType.KNIGHT.create(whitePieceColor),
-            PieceType.ROOK.create(whitePieceColor)};
-        Piece[] whitePiecesSecondRow = new Piece[SIZE];
-        for (int i = 0; i < whitePiecesSecondRow.length; i++) {
-            whitePiecesSecondRow[i] = PieceType.PAWN.create(whitePieceColor);
-        }
-        int count = 0;
+        // Piece[] whitePiecesFirstRow = new Piece[]{
+        //     PieceType.ROOK.create(whitePieceColor),
+        //     PieceType.KNIGHT.create(whitePieceColor),
+        //     PieceType.BISHOP.create(whitePieceColor),
+        //     PieceType.QUEEN.create(whitePieceColor),
+        //     PieceType.KING.create(whitePieceColor),
+        //     PieceType.BISHOP.create(whitePieceColor),
+        //     PieceType.KNIGHT.create(whitePieceColor),
+        //     PieceType.ROOK.create(whitePieceColor)};
+        // Piece[] whitePiecesSecondRow = new Piece[SIZE];
+        // for (int i = 0; i < whitePiecesSecondRow.length; i++) {
+        //     whitePiecesSecondRow[i] = PieceType.PAWN.create(whitePieceColor);
+        // }
+        // int count = 0;
 
-        for (Piece piece : whitePiecesFirstRow) {
-            if (piece != null) {
-                piece.putPieceOnSquareFirstTime(board[7][count]);
-                pieces.add(piece);
-                whitePieces.add(piece);
-                if (piece.isKing()) {
-                    whiteKingPiece = (King) piece;
-                }
-                count++;
-            }
-        }
-        count = 0;
-        for (Piece piece : whitePiecesSecondRow) {
-            if (piece != null) {
-                piece.putPieceOnSquareFirstTime(board[6][count]);
-                pieces.add(piece);
-                whitePieces.add(piece);
-                count++;
-            }
-        }
+        // for (Piece piece : whitePiecesFirstRow) {
+        //     if (piece != null) {
+        //         piece.putPieceOnSquareFirstTime(board[7][count]);
+        //         pieces.add(piece);
+        //         whitePieces.add(piece);
+        //         if (piece.isKing()) {
+        //             whiteKingPiece = (King) piece;
+        //         }
+        //         count++;
+        //     }
+        // }
+
+
+
+        // count = 0;
+        // for (Piece piece : whitePiecesSecondRow) {
+        //     if (piece != null) {
+        //         piece.putPieceOnSquareFirstTime(board[6][count]);
+        //         pieces.add(piece);
+        //         whitePieces.add(piece);
+        //         count++;
+        //     }
+        // }
         PieceColor blackPieceColor = PieceColor.BLACK;
-        Piece[] blackPiecesFirstRow = new Piece[]{
-            PieceType.ROOK.create(blackPieceColor),
-            PieceType.KNIGHT.create(blackPieceColor),
-            PieceType.BISHOP.create(blackPieceColor),
-            PieceType.QUEEN.create(blackPieceColor),
-            PieceType.KING.create(blackPieceColor),
-            PieceType.BISHOP.create(blackPieceColor),
-            PieceType.KNIGHT.create(blackPieceColor),
-            PieceType.ROOK.create(blackPieceColor)};
-        Piece[] blackPiecesSecondRow = new Piece[SIZE];
-        for (int i = 0; i < blackPiecesSecondRow.length; i++) {
-            blackPiecesSecondRow[i] = PieceType.PAWN.create(blackPieceColor);
-        }
-        count = 0;
-        for (Piece piece : blackPiecesFirstRow) {
-            if (piece != null) {
-                piece.putPieceOnSquareFirstTime(board[0][count]);
-                pieces.add(piece);
-                blackPieces.add(piece);
-                if (piece.isKing()) {
-                    blackKingPiece = (King) piece;
-                }
-                count++;
-            }
-        }
-        count = 0;
-        for (Piece piece : blackPiecesSecondRow) {
-            if (piece != null) {
-                piece.putPieceOnSquareFirstTime(board[1][count]);
-                pieces.add(piece);
-                blackPieces.add(piece);
-                count++;
-            }
-        }
+        // Piece[] blackPiecesFirstRow = new Piece[]{
+        //     PieceType.ROOK.create(blackPieceColor),
+        //     PieceType.KNIGHT.create(blackPieceColor),
+        //     PieceType.BISHOP.create(blackPieceColor),
+        //     PieceType.QUEEN.create(blackPieceColor),
+        //     PieceType.KING.create(blackPieceColor),
+        //     PieceType.BISHOP.create(blackPieceColor),
+        //     PieceType.KNIGHT.create(blackPieceColor),
+        //     PieceType.ROOK.create(blackPieceColor)};
+        // Piece[] blackPiecesSecondRow = new Piece[SIZE];
+        // for (int i = 0; i < blackPiecesSecondRow.length; i++) {
+        //     blackPiecesSecondRow[i] = PieceType.PAWN.create(blackPieceColor);
+        // }
+        // count = 0;
+        // for (Piece piece : blackPiecesFirstRow) {
+        //     if (piece != null) {
+        //         piece.putPieceOnSquareFirstTime(board[0][count]);
+        //         pieces.add(piece);
+        //         blackPieces.add(piece);
+        //         if (piece.isKing()) {
+        //             blackKingPiece = (King) piece;
+        //         }
+        //         count++;
+        //     }
+        // }
+        // count = 0;
+        // for (Piece piece : blackPiecesSecondRow) {
+        //     if (piece != null) {
+        //         piece.putPieceOnSquareFirstTime(board[1][count]);
+        //         pieces.add(piece);
+        //         blackPieces.add(piece);
+        //         count++;
+        //     }
+        // }
+
+
+        // Take input from user using a scanner object 
+        // Input Example : WRf1, WKg1, WPf2, WPh2, WPg3, BKb8, BNe8, BPa7, BPb7, BPc7, BRa5
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Enter the input string: ");
+            String input = scanner.nextLine();
+            setupBoard(input);
     }
 
     public void resetReminder() {
