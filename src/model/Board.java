@@ -162,6 +162,7 @@ public final class Board extends JPanel {
             whitePiecesSecondRow[i] = PieceType.PAWN.create(whitePieceColor);
         }
         int count = 0;
+
         for (Piece piece : whitePiecesFirstRow) {
             if (piece != null) {
                 piece.putPieceOnSquareFirstTime(board[7][count]);

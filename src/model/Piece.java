@@ -1,30 +1,18 @@
-/* 
- * Copyright (C) 2014 Joseph
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- */
+// Input and Output Formats:
+// Your program should accept as its input a board configuration that contains the position of white pieces, the position of black pieces, and the piece whose possible legal moves are to be computed.
+// For example, the input for the above board configuration should look something like this:
+// WHITE: Rf1, Kg1, Pf2, Ph2, Pg3 BLACK: Kb8, Ne8, Pa7, Pb7, Pc7, Ra5 PIECE TO MOVE: Rf1
+// Please note the use of the capital letters K, Q, R, B, N, and P to identify the King, Queen, Rook, Bishop, Knight, and Pawn respectively.
+// Given the above input description, your program should produce the following output:
+// LEGAL MOVES FOR Rf1: e1, d1, c1, b1, a1
 package model;
 
 import java.awt.Color;
 import java.util.Collection;
 import javax.swing.ImageIcon;
 
-/**
- *
- * @author Joseph
- */
+
+
 public abstract class Piece {
 
     private final PieceType pieceType;
@@ -114,15 +102,60 @@ public abstract class Piece {
         return this instanceof King;
     }
 
+    // public void printPossibleMoves() {
+
+    //     generatePossibleMoves();
+    //     getPossibleMoves().stream().forEach((_item) -> {
+
+    //         if (isOpponent(_item.getPiece())) {
+    //             _item.setBackground(Color.RED);
+    //         } else {
+    //             _item.setBackground(Color.GREEN);
+    //         }
+    //         // var row = _item.getPiece().getSquare().ROW;
+    //         // var column = _item.getPiece().getSquare().COLUMN;
+    //         // System.out.print("LEGAL MOVES FOR " + getSquare().toString() + ": ");
+    //         // var pieceType = _item.getPiece();
+    //         var rOW2 = _item.ROW;
+    //         var cOLUMN2 = _item.COLUMN;
+
+            
+
+
+    //         System.out.println("LEGAL MOVES FOR Piece " + pieceType + pieceColor + " " + " Row 2" + rOW2  + " Column 2" + cOLUMN2 + ": ");
+      
+
+            
+
+    //     });
+    // }
+
     public void printPossibleMoves() {
+        // Assuming generatePossibleMoves updates the possible moves list
         generatePossibleMoves();
-        getPossibleMoves().stream().forEach((_item) -> {
-            if (isOpponent(_item.getPiece())) {
-                _item.setBackground(Color.RED);
+        StringBuilder moves = new StringBuilder("LEGAL MOVES FOR " + this.toString() + ": ");
+        for (Square move : getPossibleMoves()) {
+            // Convert column number to letter
+            char columnLetter = (char) ('a' + move.COLUMN ); // Assuming COLUMN is 1-based index
+            // Append this move to the moves string
+
+            // If piece is white then the row number is 8 - ROW
+            if (isWhite()) {
+
+                moves.append(columnLetter).append(8- move.ROW).append(", ");
             } else {
-                _item.setBackground(Color.GREEN);
+                moves.append(columnLetter).append(8- move.ROW ).append(", ");
             }
-        });
+
+
+        }
+    
+        // Remove the last comma and space if there are moves
+        if (getPossibleMoves().size() > 0) {
+            moves.setLength(moves.length() - 2); // Remove last ", "
+        }
+    
+        System.out.println(moves.toString());
     }
 
 }

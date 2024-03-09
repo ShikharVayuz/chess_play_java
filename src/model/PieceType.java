@@ -65,22 +65,22 @@ public enum PieceType {
         String str = "";
         switch (type) {
             case 0:
-                str = "Pawn";
+                str = "P";
                 break;
             case 1:
-                str = "Rook";
+                str = "R";
                 break;
             case 2:
-                str = "Knight";
+                str = "N";
                 break;
             case 3:
-                str = "Bishop";
+                str = "B";
                 break;
             case 4:
-                str = "Queen";
+                str = "Q";
                 break;
             case 5:
-                str = "King";
+                str = "K";
                 break;
         }
         return str;
